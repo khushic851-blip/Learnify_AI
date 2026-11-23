@@ -207,6 +207,118 @@ div[data-testid="stAlert"] { border-radius: 13px; }
 .activity-meta { color:#8993a7; font-size:.74rem; margin-top:.2rem; }
 @media (max-width: 700px) { .hero-mark { display:none; } .dashboard-hero { min-height:0; } .stat-card { min-height:125px; } }
 
+
+/* Premium lavender workspace + persistent navigation */
+:root {
+    --lf-ink: #292642;
+    --lf-muted: #77738f;
+    --lf-primary: #7666d8;
+    --lf-primary-dark: #6252c4;
+    --lf-border: #e9e6f3;
+    --lf-surface: #ffffff;
+    --lf-bg: #f8f7fc;
+}
+.stApp {
+    background: #f8f7fc;
+    color: var(--lf-ink);
+}
+section[data-testid="stSidebar"] {
+    background: #ffffff;
+    border-right: 1px solid #ece9f5;
+}
+section[data-testid="stSidebar"] > div {
+    padding: 1.25rem .9rem 1rem;
+}
+section[data-testid="stSidebar"] .block-container {
+    padding-top: 1rem;
+}
+.sidebar-brand {
+    display:flex; align-items:center; gap:.65rem;
+    color:#302b49; font-size:1.35rem; font-weight:850;
+    letter-spacing:-.7px; padding:.35rem .35rem .15rem;
+}
+.sidebar-brand em { color:#7666d8; font-style:normal; }
+.sidebar-logo {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:38px; height:38px; border-radius:12px;
+    color:#fff; background:linear-gradient(145deg,#a99af2,#7565d8);
+    font-size:1.25rem;
+}
+.sidebar-caption {
+    color:#9893aa; font-size:.62rem; font-weight:800;
+    letter-spacing:.12em; padding:.3rem .4rem 1.6rem;
+}
+.sidebar-section-label {
+    color:#9994aa; font-size:.66rem; font-weight:800;
+    letter-spacing:.11em; padding:.45rem .45rem .5rem;
+}
+.sidebar-library-label { padding-top:1.55rem; }
+.sidebar-empty {
+    color:#9691a6; font-size:.8rem; line-height:1.5;
+    padding:.35rem .5rem;
+}
+.sidebar-user {
+    display:flex; align-items:center; gap:.7rem;
+    border:1px solid #eeeaf7; background:#faf9fd;
+    border-radius:14px; padding:.7rem; margin:.8rem 0 .55rem;
+}
+.sidebar-avatar {
+    width:34px; height:34px; display:flex; align-items:center;
+    justify-content:center; border-radius:11px;
+    background:#efecfb; color:#7666d8; font-size:1.1rem;
+}
+.sidebar-user b { display:block; color:#39344f; font-size:.83rem; }
+.sidebar-user small { display:block; color:#938da4; font-size:.7rem; margin-top:.1rem; }
+.sidebar-spacer { height:1.4rem; }
+section[data-testid="stSidebar"] .stButton > button {
+    text-align:left; justify-content:flex-start;
+    min-height:2.55rem; border-radius:10px;
+    border-color:transparent; background:transparent;
+    color:#615d75; font-weight:600; padding-left:.85rem;
+    box-shadow:none;
+}
+section[data-testid="stSidebar"] .stButton > button:hover {
+    background:#f4f1fc; color:#6252c4; border-color:#eeeafb;
+    transform:none;
+}
+section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+    background:#f0edfb; color:#6252c4;
+    border:1px solid #e7e1fa; box-shadow:none;
+}
+.app-topline {
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid #ece9f4; padding:.1rem 0 1rem; margin-bottom:1.5rem;
+}
+.app-topline .top-brand { padding:0; font-size:1.12rem; }
+.topline-note { color:#9994aa; font-size:.82rem; }
+.learnify-title { color:#302b49; letter-spacing:-1.1px; }
+.subtitle, .muted-copy, .stat-hint { color:#817c96; }
+.hero {
+    background:linear-gradient(120deg,#fff 0%,#f1effc 100%);
+    border:1px solid #e9e4f7; box-shadow:none;
+}
+.hero h2 { color:#302b49; }
+.badge { background:#f0edfb; color:#6858c9; }
+.ai-badge { background:#f0edfb; color:#6858c9; }
+.stat-card, .panel-card, .empty-state, .card, .history-item, .quiz-question {
+    border-color:#ebe8f3; box-shadow:0 3px 14px rgba(55,43,95,.025);
+}
+.stat-card { border-radius:15px; }
+.progress-fill { background:#8878e4; }
+.activity-dot { background:#8878e4; box-shadow:0 0 0 4px #f0edfb; }
+.word { background:#f7f5fd; border-color:#ebe7f7; }
+.diagram-box { border-color:#e9e5f4; box-shadow:none; }
+.quiz-question { border-left-color:#8878e4; }
+.stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {
+    background:#7666d8; border:1px solid #7666d8;
+}
+.stButton > button[kind="primary"]:hover, .stFormSubmitButton > button[kind="primary"]:hover {
+    background:#6656c8; border-color:#6656c8;
+}
+@media (max-width: 700px) {
+    .topline-note { display:none; }
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -933,25 +1045,69 @@ def auth_page():
 
 def top_bar():
 
-    brand_col, user_col, logout_col = st.columns([5, 2, 1])
-
-    with brand_col:
+    # Persistent navigation lives in Streamlit's fixed left sidebar.
+    with st.sidebar:
         st.markdown(
-            '<div class="top-brand">📚 <span>Learnify</span><span class="brand-ai">AI</span></div>',
+            '<div class="sidebar-brand"><span class="sidebar-logo">▣</span>'
+            '<span>Learnify <em>AI</em></span></div>',
             unsafe_allow_html=True
         )
-
-    with user_col:
         st.markdown(
-            f'<div class="user-chip">👤 {html.escape(str(st.session_state.username))}</div>',
+            '<div class="sidebar-caption">YOUR PERSONAL STUDY SPACE</div>',
             unsafe_allow_html=True
         )
+        st.markdown('<div class="sidebar-section-label">WORKSPACE</div>', unsafe_allow_html=True)
 
-    with logout_col:
-        if st.button("Log out", key="logout_top"):
+        navigation = [
+            ("home", "⌂", "Overview"),
+            ("add_chapter", "＋", "New chapter"),
+            ("history", "◷", "Learning history"),
+        ]
+        for page_key, symbol, label in navigation:
+            if st.button(
+                f"{symbol}  {label}",
+                key=f"sidebar_nav_{page_key}",
+                use_container_width=True,
+                type="primary" if st.session_state.page == page_key else "secondary"
+            ):
+                st.session_state.page = page_key
+                st.rerun()
+
+        st.markdown('<div class="sidebar-section-label sidebar-library-label">YOUR LIBRARY</div>', unsafe_allow_html=True)
+        chapters = st.session_state.get("chapters", [])
+        if not chapters:
+            st.markdown('<div class="sidebar-empty">Your chapters will appear here.</div>', unsafe_allow_html=True)
+        else:
+            for index, chapter in enumerate(chapters):
+                is_current = (
+                    st.session_state.page in ("chapter", "add_topic", "topic")
+                    and st.session_state.get("current_chapter") == index
+                )
+                if st.button(
+                    f"▤  {chapter['name']}",
+                    key=f"sidebar_chapter_{chapter['id']}",
+                    use_container_width=True,
+                    type="primary" if is_current else "secondary"
+                ):
+                    st.session_state.current_chapter = index
+                    st.session_state.page = "chapter"
+                    st.rerun()
+
+        st.markdown('<div class="sidebar-spacer"></div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="sidebar-user"><span class="sidebar-avatar">♙</span>'
+            f'<span><b>{html.escape(str(st.session_state.username or "Student"))}</b>'
+            '<small>Student account</small></span></div>',
+            unsafe_allow_html=True
+        )
+        if st.button("↪  Log out", key="sidebar_logout", use_container_width=True):
             logout()
 
-    st.markdown('<div class="top-divider"></div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="app-topline"><div class="top-brand">Learnify <span class="brand-ai">AI</span></div>'
+        '<div class="topline-note">A calmer way to learn, one topic at a time.</div></div>',
+        unsafe_allow_html=True
+    )
 
 
 # HOME
