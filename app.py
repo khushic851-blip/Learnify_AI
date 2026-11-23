@@ -166,6 +166,47 @@ div[data-testid="stAlert"] { border-radius: 13px; }
     .hero { padding: 1.4rem; border-radius: 19px; }
     .auth-box { margin: 1.2rem auto; padding: 1.25rem; }
 }
+
+.top-brand { display:flex; align-items:center; gap:.45rem; font-size:1.45rem; font-weight:850; letter-spacing:-.7px; color:var(--lf-ink); padding:.2rem 0 .7rem; }
+.brand-ai { color:var(--lf-primary); }
+.user-chip { display:inline-flex; align-items:center; justify-content:center; background:#fff; border:1px solid var(--lf-border); border-radius:999px; padding:.55rem .9rem; color:#526079; font-size:.9rem; margin-top:.1rem; }
+.top-divider { height:1px; background:var(--lf-border); margin:.2rem 0 1.4rem; }
+.dashboard-welcome { margin:.5rem 0 1rem; }
+.eyebrow { color:var(--lf-primary); font-size:.73rem; font-weight:800; letter-spacing:.12em; margin-bottom:.55rem; }
+.dashboard-welcome .subtitle { margin:.55rem 0 0; }
+.dashboard-hero { display:flex; align-items:center; justify-content:space-between; min-height:210px; }
+.dashboard-hero h2 { font-size:clamp(1.65rem,3vw,2.25rem); margin:.9rem 0 .45rem; }
+.dashboard-hero p { max-width:700px; }
+.hero-mark { color:rgba(91,92,226,.17); font-size:9rem; line-height:1; font-weight:900; padding:0 1rem; }
+.section-heading { color:var(--lf-ink); font-size:1.15rem; font-weight:800; margin:1.55rem 0 .85rem; }
+.stat-card, .panel-card, .empty-state { background:#fff; border:1px solid var(--lf-border); border-radius:18px; padding:1.1rem 1.2rem; box-shadow:0 6px 20px rgba(30,45,85,.035); min-height:140px; }
+.stat-icon { font-size:1.3rem; margin-bottom:.55rem; }
+.stat-value { color:var(--lf-ink); font-size:2rem; font-weight:850; line-height:1.1; }
+.stat-label { color:#34415d; font-weight:750; margin-top:.25rem; }
+.stat-hint, .muted-copy { color:var(--lf-muted); font-size:.83rem; margin-top:.3rem; line-height:1.55; }
+.panel-title { font-weight:800; color:var(--lf-ink); margin-bottom:.65rem; }
+.progress-number { color:var(--lf-primary); font-size:1.8rem; font-weight:850; margin:.2rem 0 .7rem; }
+.progress-number span { color:var(--lf-muted); font-size:.82rem; font-weight:500; }
+.progress-track { width:100%; height:10px; border-radius:99px; background:#edf0f8; overflow:hidden; }
+.progress-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#6264e8,#35b7a4); }
+.action-panel { min-height:140px; }
+.action-panel .stButton { margin-top:.5rem; }
+.chapter-card { display:flex; align-items:center; gap:.9rem; background:#fff; border:1px solid var(--lf-border); border-radius:15px; padding:1rem; margin:.65rem 0 .35rem; }
+.chapter-icon { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:13px; background:#f0f1ff; font-size:1.35rem; flex-shrink:0; }
+.chapter-info { min-width:0; }
+.chapter-info b { display:block; color:var(--lf-ink); overflow-wrap:anywhere; }
+.chapter-info span { display:block; color:var(--lf-muted); font-size:.8rem; margin-top:.25rem; }
+.empty-state { text-align:center; padding:2rem 1.2rem; min-height:170px; }
+.empty-icon { font-size:2rem; margin-bottom:.5rem; }
+.empty-state b { color:var(--lf-ink); }
+.empty-state p { color:var(--lf-muted); font-size:.88rem; margin:.4rem 0 0; }
+.activity-item { display:flex; gap:.8rem; padding:.9rem .2rem; border-bottom:1px solid #edf0f6; }
+.activity-dot { width:9px; height:9px; background:#6869e8; border-radius:50%; margin:.4rem .1rem 0 .2rem; flex-shrink:0; box-shadow:0 0 0 4px #f0f0ff; }
+.activity-item b { color:var(--lf-ink); font-size:.9rem; }
+.activity-topic { color:#526079; font-size:.85rem; margin-top:.15rem; }
+.activity-meta { color:#8993a7; font-size:.74rem; margin-top:.2rem; }
+@media (max-width: 700px) { .hero-mark { display:none; } .dashboard-hero { min-height:0; } .stat-card { min-height:125px; } }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -892,29 +933,27 @@ def auth_page():
 
 def top_bar():
 
-    c1, c2, c3 = st.columns(
-        [5, 2, 1]
-    )
+    brand_col, user_col, logout_col = st.columns([5, 2, 1])
 
-    with c1:
+    with brand_col:
         st.markdown(
-            f"### 📚 Learnify AI"
+            '<div class="top-brand">📚 <span>Learnify</span><span class="brand-ai">AI</span></div>',
+            unsafe_allow_html=True
         )
 
-    with c2:
-        st.caption(
-            f"👤 {st.session_state.username}"
+    with user_col:
+        st.markdown(
+            f'<div class="user-chip">👤 {html.escape(str(st.session_state.username))}</div>',
+            unsafe_allow_html=True
         )
 
-    with c3:
-        if st.button(
-            "Logout",
-            key="logout_top"
-        ):
+    with logout_col:
+        if st.button("Log out", key="logout_top"):
             logout()
 
+    st.markdown('<div class="top-divider"></div>', unsafe_allow_html=True)
 
-# =========================================================
+
 # HOME
 # =========================================================
 
@@ -922,117 +961,149 @@ def home_page():
 
     top_bar()
 
-    st.markdown(
-        '<div class="learnify-title">Welcome back 👋</div>',
-        unsafe_allow_html=True
-    )
+    username = html.escape(str(st.session_state.username or "there"))
+    chapters = st.session_state.chapters
 
-    st.markdown(
-        '<div class="subtitle">'
-        'Learn • Practice • Track your progress'
-        '</div>',
-        unsafe_allow_html=True
-    )
-
-    c1, c2, c3 = st.columns(3)
-
-    total_chapters = len(
-        st.session_state.chapters
-    )
-
-    total_topics = sum(
-        len(ch["topics"])
-        for ch in st.session_state.chapters
-    )
-
+    total_chapters = len(chapters)
+    total_topics = sum(len(ch.get("topics", [])) for ch in chapters)
     prepared_topics = sum(
-        1
-        for ch in st.session_state.chapters
-        for topic in ch["topics"]
+        1 for ch in chapters for topic in ch.get("topics", [])
         if topic.get("material")
     )
+    completion = round((prepared_topics / total_topics) * 100) if total_topics else 0
 
-    with c1:
-        st.metric(
-            "📚 Chapters",
-            total_chapters
-        )
+    conn = get_db()
+    quiz_count = conn.execute(
+        "SELECT COUNT(*) AS total FROM history WHERE user_id = ? AND action = 'Quiz completed'",
+        (st.session_state.user_id,)
+    ).fetchone()["total"]
+    recent_rows = conn.execute(
+        """
+        SELECT h.action, h.score, h.total, h.created_at,
+               t.name AS topic_name, c.name AS chapter_name
+        FROM history h
+        LEFT JOIN topics t ON h.topic_id = t.id
+        LEFT JOIN chapters c ON t.chapter_id = c.id
+        WHERE h.user_id = ?
+        ORDER BY h.id DESC
+        LIMIT 4
+        """,
+        (st.session_state.user_id,)
+    ).fetchall()
+    conn.close()
 
-    with c2:
-        st.metric(
-            "📝 Topics",
-            total_topics
-        )
+    st.markdown(
+        f'<div class="dashboard-welcome"><div class="eyebrow">YOUR LEARNING SPACE</div>'
+        f'<div class="learnify-title">Good to see you, {username} 👋</div>'
+        '<div class="subtitle">A little progress every day adds up. What would you like to learn today?</div></div>',
+        unsafe_allow_html=True
+    )
 
-    with c3:
-        st.metric(
-            "✨ Prepared",
-            prepared_topics
-        )
+    st.markdown(
+        """
+        <div class="hero dashboard-hero">
+            <div class="hero-copy">
+                <div class="badge">✦ YOUR PERSONAL AI STUDY COMPANION</div>
+                <h2>Turn curiosity into confidence.</h2>
+                <p>Create a chapter, explore a topic, understand it with AI-powered study notes,
+                and check your knowledge with a quiz — all in one focused workspace.</p>
+            </div>
+            <div class="hero-mark">✧</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.markdown("""
-    <div class="hero">
-        <div class="badge">LOCAL AI POWERED</div>
-        <h2>Learn a topic. Understand it. Test yourself.</h2>
-        <p>
-        Learnify turns your topic into easy notes, visual learning,
-        difficult-word meanings, memory tricks, exam points and a quiz.
-        Your chapters and learning history are saved locally.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    c1, c2 = st.columns(2)
-
-    with c1:
-        if st.button(
-            "➕ Add New Chapter",
-            use_container_width=True
-        ):
-            st.session_state.page = "add_chapter"
-            st.rerun()
-
-    with c2:
-        if st.button(
-            "📜 My History",
-            use_container_width=True
-        ):
-            st.session_state.page = "history"
-            st.rerun()
-
-    st.divider()
-    st.markdown("### 📚 Your Chapters")
-
-    if not st.session_state.chapters:
-
-        st.info(
-            "No chapters yet. Create your first chapter."
-        )
-
-    else:
-
-        for i, chapter in enumerate(
-            st.session_state.chapters
-        ):
-
-            count = len(
-                chapter["topics"]
+    st.markdown('<div class="section-heading">Your overview</div>', unsafe_allow_html=True)
+    metric_cols = st.columns(4)
+    metrics = [
+        ("📚", "Chapters", total_chapters, "Your study collections"),
+        ("📝", "Topics", total_topics, "Topics added"),
+        ("✨", "Study packs", prepared_topics, "AI notes generated"),
+        ("🎯", "Quizzes", quiz_count, "Completed attempts"),
+    ]
+    for col, (icon, label, value, hint) in zip(metric_cols, metrics):
+        with col:
+            st.markdown(
+                f'<div class="stat-card"><div class="stat-icon">{icon}</div>'
+                f'<div class="stat-value">{value}</div><div class="stat-label">{label}</div>'
+                f'<div class="stat-hint">{hint}</div></div>',
+                unsafe_allow_html=True
             )
 
-            if st.button(
-                f"📘 {chapter['name']}  •  "
-                f"{chapter['subject']}  •  "
-                f"{count} topics",
-                key=f"chapter_{i}",
-                use_container_width=True
-            ):
+    progress_col, action_col = st.columns([1.35, 1])
+    with progress_col:
+        st.markdown(
+            f'<div class="panel-card"><div class="panel-title">📈 Your learning progress</div>'
+            f'<div class="progress-number">{completion}% <span>of your topics have study packs</span></div>'
+            f'<div class="progress-track"><div class="progress-fill" style="width:{completion}%"></div></div>'
+            f'<div class="muted-copy">{prepared_topics} of {total_topics} topics prepared</div></div>',
+            unsafe_allow_html=True
+        )
+    with action_col:
+        st.markdown(
+            '<div class="panel-card action-panel"><div class="panel-title">⚡ Quick action</div>'
+            '<div class="muted-copy">Ready for your next learning session?</div>',
+            unsafe_allow_html=True
+        )
+        if st.button("＋  Create a new chapter", use_container_width=True, type="primary", key="dashboard_add_chapter"):
+            st.session_state.page = "add_chapter"
+            st.rerun()
+        if st.button("▤  View learning history", use_container_width=True, key="dashboard_history"):
+            st.session_state.page = "history"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-                st.session_state.current_chapter = i
-                st.session_state.page = "chapter"
-                st.rerun()
+    left, right = st.columns([1.2, 1])
+    with left:
+        st.markdown('<div class="section-heading">📚 Your chapters</div>', unsafe_allow_html=True)
+        if not chapters:
+            st.markdown(
+                '<div class="empty-state"><div class="empty-icon">📖</div>'
+                '<b>Your learning space is ready.</b><p>Create your first chapter to start building your study library.</p></div>',
+                unsafe_allow_html=True
+            )
+        else:
+            for i, chapter in enumerate(chapters):
+                topic_count = len(chapter.get("topics", []))
+                ready_count = sum(1 for t in chapter.get("topics", []) if t.get("material"))
+                st.markdown(
+                    f'<div class="chapter-card"><div class="chapter-icon">📘</div>'
+                    f'<div class="chapter-info"><b>{html.escape(str(chapter["name"]))}</b>'
+                    f'<span>{html.escape(str(chapter["subject"]))} · {topic_count} topics · {ready_count} study packs ready</span></div></div>',
+                    unsafe_allow_html=True
+                )
+                if st.button("Open chapter  →", key=f"open_chapter_{chapter['id']}", use_container_width=True):
+                    st.session_state.current_chapter = i
+                    st.session_state.page = "chapter"
+                    st.rerun()
+
+    with right:
+        st.markdown('<div class="section-heading">🕘 Recent activity</div>', unsafe_allow_html=True)
+        if not recent_rows:
+            st.markdown(
+                '<div class="empty-state"><div class="empty-icon">🌱</div>'
+                '<b>Your activity will appear here.</b><p>Open a topic or complete a quiz to start your learning timeline.</p></div>',
+                unsafe_allow_html=True
+            )
+        else:
+            for row in recent_rows:
+                action = html.escape(str(row["action"]))
+                topic_name = html.escape(str(row["topic_name"] or "Study session"))
+                chapter_name = html.escape(str(row["chapter_name"] or ""))
+                date_text = html.escape(str(row["created_at"]).replace("T", " ")[:16])
+                score_text = (
+                    f' · Score {row["score"]}/{row["total"]}'
+                    if row["score"] is not None and row["total"] else ""
+                )
+                st.markdown(
+                    f'<div class="activity-item"><div class="activity-dot"></div>'
+                    f'<div><b>{action}</b><div class="activity-topic">{topic_name}</div>'
+                    f'<div class="activity-meta">{chapter_name}{score_text} · {date_text}</div></div></div>',
+                    unsafe_allow_html=True
+                )
 
 
-# =========================================================
 # ADD CHAPTER
 # =========================================================
 
