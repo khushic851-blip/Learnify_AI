@@ -30,105 +30,141 @@ OLLAMA_MODEL = "llama3.2"
 
 st.markdown("""
 <style>
+:root {
+    --lf-ink: #18233f;
+    --lf-muted: #68748b;
+    --lf-primary: #5b5ce2;
+    --lf-primary-dark: #4546c8;
+    --lf-border: #e4e8f2;
+    --lf-surface: #ffffff;
+    --lf-bg: #f5f7fc;
+}
 .stApp {
-    background: #f7f8fc;
+    background:
+        radial-gradient(ellipse at 8% 0%, rgba(91,92,226,.09), transparent 34%),
+        radial-gradient(ellipse at 95% 12%, rgba(31,183,166,.07), transparent 28%),
+        var(--lf-bg);
+    color: var(--lf-ink);
 }
-
-#MainMenu, footer {
-    visibility: hidden;
+#MainMenu, footer { visibility: hidden; }
+header[data-testid="stHeader"] { background: transparent; }
+.stAppViewContainer .main .block-container {
+    max-width: 1240px;
+    padding: 2rem 2.2rem 4rem;
 }
-
 .learnify-title {
-    font-size: 48px;
+    color: var(--lf-ink);
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    line-height: 1.12;
     font-weight: 800;
-    letter-spacing: -1px;
+    letter-spacing: -1.5px;
 }
-
 .subtitle {
-    color: #666;
-    font-size: 19px;
-    margin-bottom: 25px;
+    color: var(--lf-muted);
+    font-size: 1.05rem;
+    margin: .55rem 0 1.6rem;
 }
-
 .hero {
-    padding: 30px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #ffffff, #eef3ff);
-    border: 1px solid #e2e6ef;
-    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    padding: 2.1rem 2.25rem;
+    border-radius: 26px;
+    background: linear-gradient(125deg, #fff 0%, #f0f2ff 58%, #edf8f8 100%);
+    border: 1px solid #e1e6f5;
+    box-shadow: 0 14px 40px rgba(37, 50, 92, .06);
+    margin: 1.25rem 0 1.6rem;
 }
-
-.card {
-    padding: 22px;
+.hero h2 { color: var(--lf-ink); font-size: 1.8rem; letter-spacing: -.6px; }
+.hero p { color: #53617a; font-size: 1rem; line-height: 1.75; max-width: 850px; }
+.card, .history-item, .quiz-question {
+    padding: 1.25rem 1.4rem;
     border-radius: 18px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    margin-bottom: 14px;
+    background: var(--lf-surface);
+    border: 1px solid var(--lf-border);
+    box-shadow: 0 5px 18px rgba(30, 45, 85, .035);
+    margin: .8rem 0;
 }
-
+.card h3 { color: var(--lf-ink); margin-bottom: .55rem; }
+.card p, .card small { color: #59667d; line-height: 1.7; }
 .word {
-    padding: 12px 15px;
-    background: #f5f7ff;
-    border-radius: 12px;
-    margin: 7px 0;
+    padding: .9rem 1rem;
+    background: #f4f5ff;
+    border: 1px solid #e7e8ff;
+    border-radius: 13px;
+    margin: .55rem 0;
+    color: #34405a;
 }
-
 .diagram-box {
-    padding: 18px;
-    border-radius: 16px;
-    background: white;
-    border: 2px solid #dfe5f5;
+    padding: 1rem 1.2rem;
+    border-radius: 15px;
+    background: #fff;
+    border: 1px solid #dfe5f5;
     text-align: center;
-    font-weight: 700;
-    margin: 5px;
+    font-weight: 650;
+    color: var(--lf-ink);
+    box-shadow: 0 4px 14px rgba(30,45,85,.04);
+    margin: .35rem 0;
 }
-
-.arrow {
-    text-align: center;
-    font-size: 25px;
-    font-weight: 800;
-    margin: 2px 0;
+.arrow { text-align: center; color: var(--lf-primary); font-size: 1.4rem; font-weight: 800; margin: .25rem 0; }
+.badge, .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .45rem .85rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 750;
+    letter-spacing: .04em;
 }
-
-.badge {
-    display: inline-block;
-    padding: 7px 13px;
-    border-radius: 20px;
-    background: #eef2ff;
-    color: #4f46e5;
-    font-size: 13px;
-    font-weight: 700;
+.badge { background: #eeefff; color: #4d4fd1; }
+.ai-badge { background: #e8f8f1; color: #137b58; margin: .5rem 0 1rem; }
+.quiz-question { background: #fdfdff; border-left: 4px solid var(--lf-primary); }
+.auth-box { max-width: 620px; margin: 3.5rem auto; padding: 2.1rem; border-radius: 24px; background: rgba(255,255,255,.88); border: 1px solid var(--lf-border); box-shadow: 0 18px 55px rgba(33,47,88,.08); }
+div[data-testid="stMetric"] {
+    background: rgba(255,255,255,.9);
+    border: 1px solid var(--lf-border);
+    padding: 1rem 1.15rem;
+    border-radius: 17px;
+    box-shadow: 0 5px 16px rgba(30,45,85,.035);
 }
-
-.ai-badge {
-    display: inline-block;
-    padding: 7px 13px;
-    border-radius: 20px;
-    background: #ecfdf5;
-    color: #047857;
-    font-size: 13px;
-    font-weight: 700;
+div[data-testid="stMetricLabel"] { color: var(--lf-muted); }
+div[data-testid="stMetricValue"] { color: var(--lf-ink); font-weight: 750; }
+.stButton > button, .stFormSubmitButton > button {
+    border: 1px solid #dfe3ef;
+    border-radius: 12px;
+    min-height: 2.8rem;
+    font-weight: 600;
+    color: #283653;
+    background: #fff;
+    transition: all .18s ease;
 }
-
-.quiz-question {
-    padding: 20px;
-    border-radius: 18px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    margin: 15px 0;
+.stButton > button:hover, .stFormSubmitButton > button:hover {
+    border-color: #a9abf0;
+    color: var(--lf-primary-dark);
+    background: #f8f8ff;
+    transform: translateY(-1px);
 }
-
-.auth-box {
-    max-width: 600px;
-    margin: 50px auto;
+.stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {
+    color: #fff;
+    background: linear-gradient(135deg, #6264e8, #4e50ce);
+    border: 0;
 }
-
-.history-item {
-    padding: 18px;
-    border-radius: 16px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    margin-bottom: 12px;
+.stButton > button[kind="primary"]:hover, .stFormSubmitButton > button[kind="primary"]:hover {
+    color: #fff;
+    background: linear-gradient(135deg, #5557d9, #4143bb);
+}
+.stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] > div {
+    border-radius: 11px;
+    border-color: #dfe4ef;
+    background: #fbfcff;
+}
+.stTabs [data-baseweb="tab-list"] { gap: .45rem; border-bottom: 1px solid var(--lf-border); }
+.stTabs [data-baseweb="tab"] { border-radius: 10px 10px 0 0; padding: .65rem 1rem; }
+hr { border-color: var(--lf-border); }
+div[data-testid="stAlert"] { border-radius: 13px; }
+@media (max-width: 700px) {
+    .stAppViewContainer .main .block-container { padding: 1.1rem 1rem 3rem; }
+    .hero { padding: 1.4rem; border-radius: 19px; }
+    .auth-box { margin: 1.2rem auto; padding: 1.25rem; }
 }
 </style>
 """, unsafe_allow_html=True)
